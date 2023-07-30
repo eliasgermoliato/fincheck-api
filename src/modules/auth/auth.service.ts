@@ -3,12 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SignInDto } from './dto/signIn.dto';
+import { SignInDto } from './dto/signin.dto';
 import { UsersRepository } from 'src/shared/database/repositories/users.repository';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpDto } from './dto/signUp.dto';
+import { SignUpDto } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -59,10 +59,23 @@ export class AuthService {
       },
     });
 
-    return {
-      name: user.name,
-      email: user.email,
-    };
+    const accessToken = await this.generateAccessToken(user.id);
+
+    return { accessToken };
+  }
+
+  async signIn(credentialsDto: SignInDto) {
+    const { email, password } = credentialsDto;
+
+    const user = await this.usersRepo.findUnique({
+      where: { email },
+    });
+
+    await this.validateCredentials(user, password);
+
+    const accessToken = await this.generateAccessToken(user.id);
+
+    return { accessToken };
   }
 
   private async validateCredentials(existingUser: User, password: string) {
@@ -78,17 +91,7 @@ export class AuthService {
     throw new UnauthorizedException(messageInvalidCredentials);
   }
 
-  async signIn(credentialsDto: SignInDto) {
-    const { email, password } = credentialsDto;
-
-    const user = await this.usersRepo.findUnique({
-      where: { email },
-    });
-
-    await this.validateCredentials(user, password);
-
-    const accessToken = await this.jwtService.signAsync({ sub: user.id });
-
-    return { accessToken };
+  private generateAccessToken(userId: string) {
+    return this.jwtService.signAsync({ sub: userId });
   }
 }
