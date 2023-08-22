@@ -1,10 +1,10 @@
 {
   "name": "fincheck-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "API responsável por realizar o gerenciamento de finanças pessoais por usuário.",
+  "author": "Elias Germoliato",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
