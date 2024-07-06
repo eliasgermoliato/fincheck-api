@@ -38,6 +38,15 @@ export class TransactionsService {
           lt: endDateInUTC,
         },
       },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
     });
   }
 
