@@ -3,19 +3,19 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SignInDto } from './dto/signin.dto';
+import { SignInDto } from './dto/signIn.dto';
 import { UsersRepository } from 'src/shared/database/repositories/users.repository';
 import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { SignUpDto } from './dto/signup.dto';
+import { SignUpDto } from './dto/signUp.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepo: UsersRepository,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUp(signUpDto: SignUpDto) {
     const { name, email, password } = signUpDto;
